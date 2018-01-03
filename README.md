@@ -1,7 +1,7 @@
 <h1> Speedrun.com App </h1>
 
 So, first I bet you're wondering "Why did you make this?". Well, the app for Android on Google Play was missing a few features and
-I wanted to brush up on JSON parsing and ListViews.
+I wanted to brush up on JSON parsing and ListViews. Utilizes Picasso for image loading into the imageviews rather than filecaching each image into a temporary folder.
 
 That being said this app allows the user to search a particular game and look at it's leaderboards. When a particular run is clicked, it
 will launch it's respective app (youtube, twitch, or whatever else the video link sends the user to). I am aware there is plenty more data
