@@ -149,13 +149,17 @@ public class Leaderboard extends AppCompatActivity {
                            if (!run.isNull("videos"))
                             {
                                 JSONObject videos = new JSONObject(run.getString("videos"));
-                                JSONArray links = videos.getJSONArray("links");
-                                for (int j = 0; j < links.length(); j++)
+                                if (videos.has("links"))
                                 {
-
+                                    JSONArray links = videos.getJSONArray("links");
+                                    for (int j = 0; j < links.length(); j++)
+                                {
                                     JSONObject firstLink = links.getJSONObject(j);
                                     videoLink = firstLink.getString("uri");
                                 }
+                                }
+
+
                             }
 
 
