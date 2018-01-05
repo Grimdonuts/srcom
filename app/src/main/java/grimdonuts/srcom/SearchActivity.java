@@ -62,7 +62,7 @@ public class SearchActivity extends AppCompatActivity {
               title.clear();
               id.clear();
               image.clear();
-
+                jsonStr=null;
                 new GetGames().execute();
             }
         });
@@ -73,9 +73,18 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
-               Intent i = new Intent(SearchActivity.this, Categories.class);
-                i.putExtra("ID", id.get(position));
-                startActivity(i);
+               try {
+                   if (!id.get(position).isEmpty()) {
+                       Intent i = new Intent(SearchActivity.this, Categories.class);
+                       i.putExtra("ID", id.get(position));
+                       startActivity(i);
+                   }
+               }
+               catch (IndexOutOfBoundsException e)
+               {
+                   return;
+               }
+
 
             }
         });
