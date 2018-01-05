@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -15,62 +17,84 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
-public class Categories extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
 
     private ListView lv;
     private ProgressDialog pDialog;
-    private String url;
     private String TAG = SearchActivity.class.getSimpleName();
-    private ArrayList<String> category = new ArrayList<String>();
-    private String ID;
-    private ArrayList<String> categoryID = new ArrayList<String>();
+    private ArrayList<String> title = new ArrayList<String>();
+    private ArrayList<String> image = new ArrayList<String>();
+    private ArrayList<String> id = new ArrayList<String>();
+    private String url;
+    private String userSearch;
     private String jsonStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_categories);
-
+        setContentView(R.layout.activity_search);
         lv = (ListView) findViewById(R.id.listView);
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
-                ID= null;
+                userSearch=null;
                 jsonStr=null;
             } else {
-                ID= extras.getString("ID");
+                userSearch=extras.getString("Search");
                 jsonStr=extras.getString("WebResponse");
+
             }
         } else {
-            ID= (String) savedInstanceState.getSerializable("ID");
+           userSearch=(String) savedInstanceState.getSerializable("Search");
             jsonStr=(String) savedInstanceState.getSerializable("WebResponse");
         }
-        url = "https://www.speedrun.com/api/v1/games/" + ID + "/categories";
-        new GetCategories().execute();
+        final EditText userInput = (EditText) findViewById(R.id.userGame);
+        deleteDirectoryTree(this.getCacheDir());
+
+        final Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+              userSearch = userInput.getText().toString();
+              url = "https://www.speedrun.com/api/v1/games?name=" + userSearch + "&max=30";
+              title.clear();
+              id.clear();
+              image.clear();
+
+                new GetGames().execute();
+            }
+        });
+
         lv.setClickable(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
-                Intent i = new Intent(Categories.this, Leaderboard.class);
-                i.putExtra("Category", category.get(position));
-                i.putExtra("CategoryID", categoryID.get(position));
-                i.putExtra("GameID", ID);
+               Intent i = new Intent(SearchActivity.this, Categories.class);
+                i.putExtra("ID", id.get(position));
                 startActivity(i);
 
             }
         });
     }
 
+    public static void deleteDirectoryTree(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteDirectoryTree(child);
+            }
+        }
+
+        fileOrDirectory.delete();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-
-        savedInstanceState.putString("ID", ID);
         savedInstanceState.putString("WebResponse", jsonStr);
+        savedInstanceState.putString("Search", userSearch);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -80,28 +104,41 @@ public class Categories extends AppCompatActivity {
 
         super.onRestoreInstanceState(savedInstanceState);
         jsonStr = savedInstanceState.getString("WebResponse");
-        ID = savedInstanceState.getString("ID");
+        userSearch = savedInstanceState.getString("Search");
     }
-
 
     @Override
-    protected void onDestroy() {
-        pDialog.dismiss();
-        super.onDestroy();
+    protected void onResume(){
+        super.onResume();
+        EditText userInput = (EditText) findViewById(R.id.userGame);
+        if (!userInput.getText().toString().isEmpty())
+        {
+            url = "https://www.speedrun.com/api/v1/games?name=" + userInput.getText() + "&max=30";
+            title.clear();
+            id.clear();
+            image.clear();
+
+            new GetGames().execute();
+            GamesListAdapter adapter = new GamesListAdapter(SearchActivity.this,title,image);
+            adapter.notifyDataSetChanged();
+            lv.setAdapter(adapter);
+        }
 
 
     }
 
-    private class GetCategories extends AsyncTask<Void, Void, Void> {
+
+
+    private class GetGames extends AsyncTask<Void, Void, Void> {
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pDialog = new ProgressDialog(Categories.this);
+            pDialog = new ProgressDialog(SearchActivity.this);
             pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
+            pDialog.setCancelable(true);
             pDialog.show();
 
         }
@@ -111,30 +148,34 @@ public class Categories extends AppCompatActivity {
             if (jsonStr == null)
             {
                 UrlHandler sh = new UrlHandler();
+
                 jsonStr = sh.makeServiceCall(url);
+
                 Log.e(TAG, "Response from url: " + jsonStr);
             }
 
 
-            if (jsonStr != null) {
+             if (jsonStr != null) {
                 try {
                     JSONObject jObject = new JSONObject(jsonStr);
                     JSONArray jsonArray = jObject.getJSONArray("data");
-
                     if (jsonArray.length() == 0)
                     {
-                        category.add("Couldn't find game or categories");
+                        title.add("Couldn't find game");
                     }
                     else
                     {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
+                            id.add(c.getString("id"));
+                            JSONObject names = new JSONObject(c.getString("names"));
+                            title.add(names.getString("international"));
+                            JSONObject assets = new JSONObject(c.getString("assets"));
+                            JSONObject images = new JSONObject(assets.getString("cover-medium"));
 
-                            category.add(c.getString("name"));
-                            categoryID.add(c.getString("id"));
+                            image.add(images.getString("uri"));
+                    }
 
-
-                        }
 
 
                     }
@@ -175,7 +216,7 @@ public class Categories extends AppCompatActivity {
 
                 pDialog.dismiss();
 
-            CategoriesListAdapter adapter = new CategoriesListAdapter(Categories.this,category);
+            GamesListAdapter adapter = new GamesListAdapter(SearchActivity.this,title,image);
             adapter.notifyDataSetChanged();
             lv.setAdapter(adapter);
 

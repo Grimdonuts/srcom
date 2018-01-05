@@ -27,11 +27,13 @@ public class VideoActivity extends AppCompatActivity {
 
         }
         WebView browser = (WebView) findViewById(R.id.webview);
-        if (videoURL != null)
+
+       if (videoURL != null && !videoURL.startsWith("http://www.speedrunslive.com"))
         {
             browser.loadUrl(videoURL);
             finish();
         }
+
         else
         {
             runOnUiThread(new Runnable() {
@@ -61,7 +63,7 @@ public class VideoActivity extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
 
         super.onRestoreInstanceState(savedInstanceState);
-        savedInstanceState.putString("Video", videoURL);
+        videoURL = savedInstanceState.getString("Video");
 
     }
 

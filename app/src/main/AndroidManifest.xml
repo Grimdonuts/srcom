@@ -22,7 +22,8 @@
         </activity>
         <activity android:name=".Categories" />
         <activity android:name=".Leaderboard" />
-        <activity android:name=".VideoActivity"></activity>
+        <activity android:name=".VideoActivity" />
+        <activity android:name=".SearchActivity"></activity>
     </application>
 
 </manifest>

@@ -26,10 +26,11 @@ public class Leaderboard extends AppCompatActivity {
     private String gameID;
     private String url;
     private ProgressDialog pDialog;
-    private String TAG = MainActivity.class.getSimpleName();
+    private String TAG = SearchActivity.class.getSimpleName();
     private ArrayList<String> leaderboard = new ArrayList<String>();
     private ArrayList<String> leaderboardTimes = new ArrayList<String>();
     private ArrayList<String> videosList = new ArrayList<String>();
+    private String jsonStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +44,19 @@ public class Leaderboard extends AppCompatActivity {
                 ID= null;
                 categoryName=null;
                 gameID=null;
+                jsonStr=null;
             } else {
                 ID= extras.getString("CategoryID");
                 categoryName=extras.getString("Category");
                 gameID=extras.getString("GameID");
+                jsonStr=extras.getString("WebResponse");
 
             }
         } else {
             ID= (String) savedInstanceState.getSerializable("CategoryID");
             categoryName=(String) savedInstanceState.getSerializable("Category");
             gameID=(String) savedInstanceState.getSerializable("GameID");
+            jsonStr=(String) savedInstanceState.getSerializable("WebResponse");
         }
         url = "https://www.speedrun.com/api/v1/leaderboards/"+ gameID + "/category/" + ID + "?embed=players";
         TextView catNameDisplay = (TextView) findViewById(R.id.textView2);
@@ -78,6 +82,7 @@ public class Leaderboard extends AppCompatActivity {
         savedInstanceState.putString("CategoryID", ID);
         savedInstanceState.putString("Category", categoryName);
         savedInstanceState.putString("GameID", gameID);
+        savedInstanceState.putString("WebResponse", jsonStr);
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -86,9 +91,10 @@ public class Leaderboard extends AppCompatActivity {
     public void onRestoreInstanceState(Bundle savedInstanceState) {
 
         super.onRestoreInstanceState(savedInstanceState);
-        savedInstanceState.putString("CategoryID", ID);
-        savedInstanceState.putString("Category", categoryName);
-        savedInstanceState.putString("GameID", gameID);
+        ID = savedInstanceState.getString("CategoryID");
+       categoryName = savedInstanceState.getString("Category");
+        gameID = savedInstanceState.getString("GameID");
+        jsonStr = savedInstanceState.getString("WebResponse");
 
     }
 
@@ -117,13 +123,14 @@ public class Leaderboard extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            UrlHandler sh = new UrlHandler();
+            if (jsonStr == null)
+            {
+                UrlHandler sh = new UrlHandler();
+                jsonStr = sh.makeServiceCall(url);
+                Log.e(TAG, "Response from url: " + jsonStr);
+            }
 
-            String jsonStr = sh.makeServiceCall(url);
-
-            Log.e(TAG, "Response from url: " + jsonStr);
-
-            if (jsonStr != null) {
+             if (jsonStr != null) {
                 try {
                     JSONObject jObject = new JSONObject(jsonStr);
                     JSONObject data = jObject.getJSONObject("data");
@@ -143,12 +150,12 @@ public class Leaderboard extends AppCompatActivity {
                     {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
-                            JSONObject run = new JSONObject(c.getString("run"));
+                            JSONObject run = c.getJSONObject("run");
 
                             String videoLink = null;
                            if (!run.isNull("videos"))
                             {
-                                JSONObject videos = new JSONObject(run.getString("videos"));
+                                JSONObject videos = run.getJSONObject("videos");
                                 if (videos.has("links"))
                                 {
                                     JSONArray links = videos.getJSONArray("links");
