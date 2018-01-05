@@ -7,7 +7,7 @@ That being said this app allows the user to search a particular game and look at
 will launch it's respective app (youtube, twitch, or whatever else the video link sends the user to). I am aware there is plenty more data
 to include in this app such as platform the game was run on, but this was more of a practice project than a complete app for users in mind.
 
-<a href="https://www.dropbox.com/s/0fitc8vl1rm4lds/srcom.apk?dl=0"> Download </a>
+<a href="https://github.com/Grimdonuts/srcom/raw/master/srcom.apk"> Download </a>
 
 <img src="http://puu.sh/yTmsc/6d8bb7879a.jpg" height="400" width="250"/>
 <img src="http://puu.sh/yTmsq/fc436c794e.jpg" height="400" width="250"/>
