@@ -33,11 +33,7 @@ public class VideoActivity extends AppCompatActivity {
             browser.loadUrl(videoURL);
             finish();
         }
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> origin/master
         else
         {
             runOnUiThread(new Runnable() {
