@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPreExecute();
 
             pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setMessage("Please wait...Retrieving latest runs from speedrun.com.\n Tap to outside this window dismiss this.");
+            pDialog.setMessage("Please wait...Retrieving latest runs from speedrun.com.\n Tap outside this window dismiss this.");
             pDialog.setCancelable(true);
             pDialog.setCanceledOnTouchOutside(true);
             pDialog.show();
