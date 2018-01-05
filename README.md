@@ -9,7 +9,7 @@ to include in this app such as platform the game was run on, but this was more o
 
 <a href="https://github.com/Grimdonuts/srcom/raw/master/srcom.apk"> Download </a>
 
-<img src="http://puu.sh/yTmsc/6d8bb7879a.jpg" height="400" width="250"/>
+<img src="http://puu.sh/yUF5d/319f556988.jpg" height="400" width="250"/>
 <img src="http://puu.sh/yTmsq/fc436c794e.jpg" height="400" width="250"/>
 <img src="http://puu.sh/yTmsP/ff32d67d1f.jpg" height="400" width="250"/>
 <img src="http://puu.sh/yTmt1/c6870dfc1b.jpg" height="400" width="250"/>
