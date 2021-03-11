@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="grimdonuts.srcom.Leaderboard">
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
@@ -15,7 +14,6 @@
         android:gravity="center"
         android:textSize="25dp"
         />
-
     <ListView
         android:layout_marginTop="20px"
         android:id="@+id/listView"

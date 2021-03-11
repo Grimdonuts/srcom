@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="grimdonuts.srcom.VideoActivity">
-
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"

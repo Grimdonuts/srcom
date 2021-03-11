@@ -7,25 +7,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="grimdonuts.srcom.SearchActivity">
-
     <EditText
         android:id="@+id/userGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Game Name"
         android:inputType="textPersonName" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Search" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
@@ -34,5 +30,4 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
     </LinearLayout>
-
 </LinearLayout>

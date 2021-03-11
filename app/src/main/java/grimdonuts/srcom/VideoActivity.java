@@ -1,70 +1,66 @@
 package grimdonuts.srcom;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 public class VideoActivity extends AppCompatActivity {
 
-    private String videoURL;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_activity);
+  private String videoURL;
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                videoURL= null;
-            } else {
-                videoURL= extras.getString("Video");
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_video_activity);
 
-            }
-        } else {
-            videoURL= (String) savedInstanceState.getSerializable("Video");
-
-        }
-        WebView browser = (WebView) findViewById(R.id.webview);
-
-       if (videoURL != null && !videoURL.startsWith("http://www.speedrunslive.com"))
-        {
-            browser.loadUrl(videoURL);
-            finish();
-        }
-
-        else
-        {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(),
-                            "No Video provided",
-                            Toast.LENGTH_LONG)
-                            .show();
-                }
-            });
-            finish();
-        }
-
-
+    if (savedInstanceState == null) {
+      Bundle extras = getIntent().getExtras();
+      if (extras == null) {
+        videoURL = null;
+      } else {
+        videoURL = extras.getString("Video");
+      }
+    } else {
+      videoURL = (String) savedInstanceState.getSerializable("Video");
     }
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    WebView browser = (WebView) findViewById(R.id.webview);
 
-        savedInstanceState.putString("Video", videoURL);
-
-        super.onSaveInstanceState(savedInstanceState);
+    if (
+      videoURL != null && !videoURL.startsWith("http://www.speedrunslive.com")
+    ) {
+      browser.loadUrl(videoURL);
+      finish();
+    } else {
+      runOnUiThread(
+        new Runnable() {
+          @Override
+          public void run() {
+            Toast
+              .makeText(
+                getApplicationContext(),
+                "No Video provided",
+                Toast.LENGTH_LONG
+              )
+              .show();
+          }
+        }
+      );
+      finish();
     }
+  }
 
+  @Override
+  public void onSaveInstanceState(Bundle savedInstanceState) {
+    savedInstanceState.putString("Video", videoURL);
 
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onSaveInstanceState(savedInstanceState);
+  }
 
-        super.onRestoreInstanceState(savedInstanceState);
-        videoURL = savedInstanceState.getString("Video");
-
-    }
-
+  @Override
+  public void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    videoURL = savedInstanceState.getString("Video");
+  }
 }
